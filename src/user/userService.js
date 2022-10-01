@@ -28,7 +28,7 @@ async function signin(userInfo) {
     error.statusCode = 400;
     throw error;
   }
-  const isValidPassword = await bcrypt.compare(userInfo.password, isExistedUser.password);
+  const isValidPassword = await bcrypt.compare(password, isExistedUser.password);
 
   if (isValidPassword) {
     const payload = {
