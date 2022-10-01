@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
       name: {
         type: DataTypes.STRING,
       },
-      poassword: {
+      password: {
         type: DataTypes.STRING,
       },
     },

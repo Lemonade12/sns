@@ -1,6 +1,6 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "post",
+    "like",
     {
       id: {
         autoIncrement: true,
@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
       timestamps: true,
-      tableName: "post",
+      tableName: "like",
       charset: "utf8mb4",
     }
   );
