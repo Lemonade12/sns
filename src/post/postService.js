@@ -51,16 +51,13 @@ async function updatePost(updateInfo, userId, postId) {
 
 async function readPost(postId) {
   const postInfo = await postRepo.readPostById(postId);
-  if (!postInfo) {
+  if (!postInfo || postInfo.is_deleted == 1) {
+    // 게시글이 존재하지 않거나 삭제된 게시글인 경우
     const error = new Error("존재하지 않는 게시글 입니다.");
     error.statusCode = 404;
     throw error;
   }
-  if (postInfo.is_deleted == 1) {
-    const error = new Error("삭제 된 게시글 입니다.");
-    error.statusCode = 404;
-    throw error;
-  }
+  //조회수 업데이트
   const updateInfo = {
     hit: postInfo.hit + 1,
   };
@@ -69,8 +66,49 @@ async function readPost(postId) {
   return postInfo;
 }
 
+async function likePost(postId, userId) {
+  const postInfo = await postRepo.readPostById(postId);
+  if (!postInfo || postInfo.is_deleted == 1) {
+    // 게시글이 존재하지 않거나 삭제된 게시글인 경우
+    const error = new Error("존재하지 않는 게시글 입니다.");
+    error.statusCode = 404;
+    throw error;
+  }
+  const isLiked = await postRepo.readLikeByPostIdAndUserId(postId, userId);
+  if (!isLiked) {
+    //좋아요 아닌 경우에는 좋아요
+    await postRepo.createLike(postId, userId);
+    return { isLiked: true };
+  } else {
+    // 좋아요 취소
+    await postRepo.deleteLike(postId, userId);
+    return { isLiked: false };
+  }
+}
+
+async function readPostList(condition) {
+  // default 값 세팅
+  if (!condition.orderBy) {
+    condition.orderBy = "createdAt";
+  }
+  if (!condition.order) {
+    condition.order = "DESC";
+  }
+  if (!condition.page) {
+    condition.page = 1;
+  }
+  if (!condition.limit) {
+    condition.limit = 10;
+  }
+  console.log(condition);
+  const data = await postRepo.readPostList(condition);
+  return data;
+}
+
 module.exports = {
   createPost,
   updatePost,
   readPost,
+  likePost,
+  readPostList,
 };

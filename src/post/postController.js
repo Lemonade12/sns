@@ -42,6 +42,25 @@ async function likeController(req, res) {
     const postId = req.params.id;
     const userId = req.userId;
     const data = await postService.likePost(postId, userId);
+    return res.status(StatusCodes.OK).send(data);
+  } catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 500).json({ message: err.message });
+  }
+}
+
+async function readPostList(req, res) {
+  try {
+    const condition = {
+      search: req.query.search,
+      orderBy: req.query.orderBy,
+      order: req.query.order,
+      hastags: req.query.hastags,
+      page: req.query.page,
+      limit: req.query.limit,
+    };
+    console.log(condition);
+    const data = await postService.readPostList(condition);
     return res.status(StatusCodes.OK).send({ data });
   } catch (err) {
     console.log(err);
@@ -53,4 +72,6 @@ module.exports = {
   createPost,
   updatePost,
   readPost,
+  likeController,
+  readPostList,
 };
