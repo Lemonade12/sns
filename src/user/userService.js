@@ -13,6 +13,7 @@ async function signup(userInfo) {
   const { email, password, name } = userInfo;
   const isExistedUser = await userRepo.readUserByEmail(email);
   if (isExistedUser) {
+    // 이메일 중복여부 체크
     const error = new Error("이미 사용중인 이메일 입니다.");
     error.statusCode = 400;
     throw error;
@@ -24,6 +25,7 @@ async function signin(userInfo) {
   const { email, password } = userInfo;
   const isExistedUser = await userRepo.readUserByEmail(email);
   if (!isExistedUser) {
+    // 존재하는 유저인지 체크
     const error = new Error("존재하지 않는 ID 입니다.");
     error.statusCode = 400;
     throw error;
@@ -31,6 +33,7 @@ async function signin(userInfo) {
   const isValidPassword = await bcrypt.compare(password, isExistedUser.password);
 
   if (isValidPassword) {
+    // password 맞으면 access token 발급
     const payload = {
       id: isExistedUser.id,
     };

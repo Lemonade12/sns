@@ -4,6 +4,6 @@ const postRouter = require("./post/postRouter");
 const router = express.Router();
 
 router.use(userRouter);
-//router.user(postRouter);
+router.use(postRouter);
 
 module.exports = router;
