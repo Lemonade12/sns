@@ -85,56 +85,36 @@ async function readPostList(condition) {
     attributes: [
       ["id", "게시글_id"],
       ["title", "제목"],
-      ["content", "내용"],
       ["hit", "조회수"],
       ["createdAt", "작성일"],
       [sequelize.col("user.name"), "작성자"],
+      [sequelize.fn("count", sequelize.col("like.id")), "좋아요 수"],
     ],
     include: [
       {
         model: user,
+        as: "user",
         attributes: [],
       },
       {
         model: like,
-      },
-    ],
-  });
-  return data;
-  /*const data = await post.findAll({
-    attributes: [
-      ["id", "게시글_id"],
-      ["title", "제목"],
-      ["content", "내용"],
-      ["hit", "조회수"],
-      ["createdAt", "작성일"],
-      [sequelize.col("user.name"), "작성자"],
-    ],
-    include: [
-      {
-        model: user,
+        as: "like",
         attributes: [],
       },
-      {
-        model: like,
-        attributes: [],
-      },
-      {
-        model: post_tag,
-        attributes: [],
-        include: [
-          {
-            model: tag,
-            attributes: [],
-          },
-        ],
-      },
     ],
+    group: "post.id",
+    where: {
+      title: {
+        [Op.like]: "%" + condition.search + "%",
+      },
+    },
     order: [[condition.orderBy, condition.order]],
     offset: offset,
-    limit: condition.limit,
+    limit: Number(condition.limit),
+    subQuery: false,
+    raw: true,
   });
-  return data;*/
+  return data;
 }
 
 module.exports = {

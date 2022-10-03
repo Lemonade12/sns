@@ -89,7 +89,7 @@ async function likePost(postId, userId) {
 async function readPostList(condition) {
   // default 값 세팅
   if (!condition.orderBy) {
-    condition.orderBy = "createdAt";
+    condition.orderBy = "작성일";
   }
   if (!condition.order) {
     condition.order = "DESC";

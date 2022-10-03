@@ -12,16 +12,16 @@ function initModels(sequelize) {
   var post_tag = postTagModel(sequelize, DataTypes);
   var like = likeModel(sequelize, DataTypes);
 
-  like.belongsTo(user, { foreignKey: "user_id" });
-  user.hasMany(like, { foreignKey: "user_id" });
-  post.belongsTo(user, { foreignKey: "user_id" });
-  user.hasMany(post, { foreignKey: "user_id" });
-  post_tag.belongsTo(post, { foreignKey: "post_id" });
-  post.hasMany(post_tag, { foreignKey: "post_id" });
-  post_tag.belongsTo(tag, { foreignKey: "tag_id" });
-  tag.hasMany(post_tag, { foreignKey: "tag_id" });
-  like.belongsTo(post, { foreignKey: "post_id" });
-  post.hasMany(like, { foreignKey: "post_id" });
+  like.belongsTo(user, { foreignKey: "user_id", as: "user" });
+  user.hasMany(like, { foreignKey: "user_id", as: "like" });
+  post.belongsTo(user, { foreignKey: "user_id", as: "user" });
+  user.hasMany(post, { foreignKey: "user_id", as: "post" });
+  post_tag.belongsTo(post, { foreignKey: "post_id", as: "post" });
+  post.hasMany(post_tag, { foreignKey: "post_id", as: "post_tag" });
+  post_tag.belongsTo(tag, { foreignKey: "tag_id", as: "tag" });
+  tag.hasMany(post_tag, { foreignKey: "tag_id", as: "post_tag" });
+  like.belongsTo(post, { foreignKey: "post_id", as: "post" });
+  post.hasMany(like, { foreignKey: "post_id", as: "like" });
 
   return {
     user,
